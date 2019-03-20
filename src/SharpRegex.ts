@@ -1,7 +1,7 @@
 /**
  * Created by Mostafa Lavaei
  */
-export class Regex
+export class SharpRegex
 {
 	protected regexp: RegExp;
 	protected groupIndexMapper: { [key: number]: number };

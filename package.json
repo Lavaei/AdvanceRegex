@@ -1,5 +1,5 @@
 {
-  "name": "@lavaei/regex",
+  "name": "sharp-regex",
   "version": "1.0.0",
   "description": "Implements advance feature for regex",
   "main": "public_api.ts",
