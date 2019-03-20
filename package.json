@@ -2,12 +2,12 @@
   "name": "sharp-regex",
   "version": "1.0.0",
   "description": "Implements advance feature for regex",
-  "main": "public_api.ts",
+  "main": "src/public_api.ts",
   "scripts": {
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Lavaei/Regex.git"
+    "url": "git+https://github.com/Lavaei/SharpRegex.git"
   },
   "keywords": [
     "Regex"
@@ -15,7 +15,12 @@
   "author": "Mostafa Lavaei",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Lavaei/Regex/issues"
+    "url": "https://github.com/Lavaei/SharpRegex/issues"
   },
-  "homepage": "https://github.com/Lavaei/Regex#readme"
+  "homepage": "https://github.com/Lavaei/SharpRegex#readme",
+  "files": [
+	"src/public_api.ts",
+	"src/SharpRegex.ts",
+	"tsconfig.json"
+  ]
 }

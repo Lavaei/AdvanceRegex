@@ -31,8 +31,7 @@ will find given group details, returns {match: string, start: number, end: numbe
 ## Usage
 ```
 let sharpRegex = new SharpRegex(/a(?: )bc(def(ghi)xyz)/g),
-    result = sharpRegex.getFullDetails('ababa 
-bcdefghixyzXXXX');
+    result = sharpRegex.getFullDetails('ababa bcdefghixyzXXXX');
 
 console.log(result);
 ```

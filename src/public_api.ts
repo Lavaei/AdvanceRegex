@@ -2,4 +2,4 @@
  * Public API Surface of ngx-thread
  */
 
-export * from './src/SharpRegex';
+export * from './SharpRegex';
