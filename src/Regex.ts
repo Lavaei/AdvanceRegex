@@ -1,7 +1,7 @@
 /**
  * Created by Mostafa Lavaei
  */
-export class AdvanceRegex
+export class Regex
 {
 	protected regexp: RegExp;
 	protected groupIndexMapper: { [key: number]: number };

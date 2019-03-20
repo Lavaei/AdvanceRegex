@@ -1,4 +1,4 @@
-# AdvanceRegex
+# Regex
 
 This class gets all matches, with start and end position, within the string, for a given regexp.
 
@@ -10,7 +10,7 @@ From high level the source code is:
 
 ## API
 
-#### AdvanceRegex(baseRegExp: Regexp)
+#### Regex(baseRegExp: Regexp)
 
 will setup parsed regexp, returns instance
 
@@ -30,8 +30,8 @@ will find given group details, returns {match: string, start: number, end: numbe
 
 ## Usage
 ```
-let advanceRegex = new AdvanceRegex(/a(?: )bc(def(ghi)xyz)/g),
-    result = advanceRegex.getFullDetails('ababa 
+let regex = new Regex(/a(?: )bc(def(ghi)xyz)/g),
+    result = regex.getFullDetails('ababa 
 bcdefghixyzXXXX');
 
 console.log(result);
@@ -51,7 +51,7 @@ Will output:
 To get just groups details:
 
 ```
-let matches = advanceRegex.getGroupsDetails('ababa bcdefghixyzXXXX');
+let matches = regex.getGroupsDetails('ababa bcdefghixyzXXXX');
 
 /**
  * [ 
@@ -65,7 +65,7 @@ let matches = advanceRegex.getGroupsDetails('ababa bcdefghixyzXXXX');
 To get just given group details:
 
 ```
-let matches = advanceRegex.getGroupDetails('ababa bcdefghixyzXXXX', 2);
+let matches = regex.getGroupDetails('ababa bcdefghixyzXXXX', 2);
 
 /**
  * { match: 'ghi', start: 11, end: 14, group: 2 }
