@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Lavaei/AdvanceRegex.git"
+    "url": "git+https://github.com/Lavaei/Regex.git"
   },
   "keywords": [
     "Regex"
@@ -15,7 +15,7 @@
   "author": "Mostafa Lavaei",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Lavaei/AdvanceRegex/issues"
+    "url": "https://github.com/Lavaei/Regex/issues"
   },
-  "homepage": "https://github.com/Lavaei/AdvanceRegex#readme"
+  "homepage": "https://github.com/Lavaei/Regex#readme"
 }
