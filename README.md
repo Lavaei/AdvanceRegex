@@ -1,4 +1,4 @@
-# MultiRegExp2
+# AdvanceRegex
 
 This class gets all matches, with start and end position, within the string, for a given regexp.
 
@@ -10,43 +10,64 @@ From high level the source code is:
 
 ## API
 
-MultiRegexp2(baseRegExp: Regexp)
----
+#### AdvanceRegex(baseRegExp: Regexp)
+
 will setup parsed regexp, returns instance
 
-execForAllGroups(string: string, includeFullMatch: boolean)
----
-will find all matching groups, returns array<{match: string, start: Number, end: Number}>
+#### getFullDetails(subject: string)
 
-execForGroup(string: string, group: Number)
----
-will find match for group number, returns {match: string, start: Number, end: Number}
+will find the full match and all matching groups, returns {match: string, start: number, end: number, group: 
+number}[]
+
+#### getGroupsDetails(subject: string)
+
+will find all matching groups, returns {match: string, start: number, end: number, group: 
+number}[]
+
+#### getGroupDetails(subject: string, group:number)
+
+will find given group details, returns {match: string, start: number, end: number}
 
 ## Usage
 ```
-let regex = /a(?: )bc(def(ghi)xyz)/g;
-let regex2 = new MultiRegExp2(regex);
+let advanceRegex = new AdvanceRegex(/a(?: )bc(def(ghi)xyz)/g),
+    result = advanceRegex.getFullDetails('ababa 
+bcdefghixyzXXXX');
 
-let matches = regex2.execForAllGroups('ababa bcdefghixyzXXXX');
-console.log(matches);
-// reset to beginning: regex2.regexp.lastIndex = 0;
+console.log(result);
 ```
 
 Will output:
 ```
-[ { match: 'defghixyz', start: 8, end: 17 },
-  { match: 'ghi', start: 11, end: 14 } ]
+/**
+ * [ 
+ *  { match: 'a bcdefghixyz', start: 4, end: 17, group: 0 },
+ *  { match: 'defghixyz', start: 8, end: 17, group: 1 },
+ *  { match: 'ghi', start: 11, end: 14, group: 2 } 
+ * ]
+ */
 ```
 
-If you want to include the full match (group 0) then add true as the second parameter.
+To get just groups details:
 
-Also available:
 ```
-let matches = regex2.execForGroup('ababa bcdefghixyzXXXX', 2);
-= { match: 'ghi', start: 11, end: 14 }
+let matches = advanceRegex.getGroupsDetails('ababa bcdefghixyzXXXX');
+
+/**
+ * [ 
+ *  { match: 'defghixyz', start: 8, end: 17, group: 1 },
+ *  { match: 'ghi', start: 11, end: 14, group: 2 } 
+ * ]
+ */
+
 ```
 
+To get just given group details:
 
-## Contribution
+```
+let matches = advanceRegex.getGroupDetails('ababa bcdefghixyzXXXX', 2);
 
-to compile the module to ES5 run `npm install && npm run build && npm run test`
+/**
+ * { match: 'ghi', start: 11, end: 14, group: 2 }
+ */
+```
