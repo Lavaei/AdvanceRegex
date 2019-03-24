@@ -20,66 +20,86 @@ export class SharpRegex
 	 * Get all detail of full match and all groups details
 	 * @param {string} subject The subject string
 	 */
-	getFullDetails(subject: string): { match: string, start: number, end: number, group: number }[]
+	getFullDetails(subject: string): { match: string, start: number, end: number, group: number }[][]
 	{
-		let matches: RegExpExecArray                    = this.regexp.exec(subject),
+		let matches: RegExpExecArray,
 		    firstIndex: number,
-		    indexMapper: { [key: number]: number }      = Object.assign({0: 0}, this.groupIndexMapper),
-		    previousGroups: { [key: number]: number[] } = Object.assign({0: []}, this.previousGroupsForGroup);
+		    indexMapper: { [key: number]: number }                                   = Object.assign({0: 0}, this.groupIndexMapper),
+		    previousGroups: { [key: number]: number[] }                              = Object.assign({0: []}, this.previousGroupsForGroup),
+		    regexClone: RegExp                                                       = this.regexp,
+		    result: { match: string, start: number, end: number, group: number }[][] = [];
 
-		if (!matches)
+		while ((matches = regexClone.exec(subject)) !== null)
 		{
-			return [];
+			firstIndex = matches.index;
+
+			result.push(
+				Object.keys(indexMapper).map((group) => {
+					let mapped: number = indexMapper[group],
+					    start: number  = firstIndex + previousGroups[group].reduce(
+						    (sum, i) => sum + (matches[i] ? matches[i].length : 0), 0
+					    );
+
+					return {
+						match: matches[mapped],
+						start: start,
+						end:   start + (matches[mapped] ? matches[mapped].length : 0),
+						group: parseInt(group)
+					};
+				})
+			);
+
+			if (regexClone.lastIndex == matches.index)
+			{
+				regexClone.lastIndex++;
+			}
 		}
 
-		firstIndex = matches.index;
-
-		return Object.keys(indexMapper).map((group) => {
-			let mapped: number                                                       = indexMapper[group],
-			    start: number                                                        = firstIndex + previousGroups[group].reduce(
-				    (sum, i) => sum + (matches[i] ? matches[i].length : 0), 0
-			    );
-
-			return {
-				match: matches[mapped],
-				start: start,
-				end:   start + (matches[mapped] ? matches[mapped].length : 0),
-				group: parseInt(group)
-			};
-		});
+		return result;
 	}
 
 	/**
 	 * Get all groups details
 	 * @param {string} subject The subject string
 	 */
-	getGroupsDetails(subject: string): { match: string, start: number, end: number, group: number }[]
+	getGroupsDetails(subject: string): { match: string, start: number, end: number, group: number }[][]
 	{
-		let matches: RegExpExecArray                    = this.regexp.exec(subject),
-		    indexMapper: { [key: number]: number }      = this.groupIndexMapper,
-		    previousGroups: { [key: number]: number[] } = this.previousGroupsForGroup,
-		    firstIndex: number;
+		let matches: RegExpExecArray                                                 = this.regexp.exec(subject),
+		    indexMapper: { [key: number]: number }                                   = this.groupIndexMapper,
+		    previousGroups: { [key: number]: number[] }                              = this.previousGroupsForGroup,
+		    firstIndex: number,
+		    regexClone: RegExp                                                       = this.regexp,
+		    result: { match: string, start: number, end: number, group: number }[][] = [];
 
-		if (!matches)
+
+		while ((matches = regexClone.exec(subject)) !== null)
 		{
-			return [];
+
+			firstIndex = matches.index;
+
+			result.push(
+				Object.keys(indexMapper).map((group) => {
+					let mapped: number = indexMapper[group],
+					    start: number  = firstIndex + previousGroups[group].reduce(
+						    (sum, i) => sum + (matches[i] ? matches[i].length : 0), 0
+					    );
+
+					return {
+						match: matches[mapped],
+						start: start,
+						end:   start + (matches[mapped] ? matches[mapped].length : 0),
+						group: parseInt(group)
+					};
+				})
+			);
+
+			if (regexClone.lastIndex == matches.index)
+			{
+				regexClone.lastIndex++;
+			}
 		}
 
-		firstIndex = matches.index;
-
-		return Object.keys(indexMapper).map((group) => {
-			let mapped: number                                                       = indexMapper[group],
-			    start: number                                                        = firstIndex + previousGroups[group].reduce(
-				    (sum, i) => sum + (matches[i] ? matches[i].length : 0), 0
-			    );
-
-			return {
-				match: matches[mapped],
-				start: start,
-				end:   start + (matches[mapped] ? matches[mapped].length : 0),
-				group: parseInt(group)
-			};
-		});
+		return result;
 	}
 
 	/**
@@ -87,37 +107,47 @@ export class SharpRegex
 	 * @param {string} subject The subject string
 	 * @param {number} group The group number
 	 */
-	getGroupDetails(subject: string, group: number): { match: string, start: number, end: number }
+	getGroupDetails(subject: string, group: number): { match: string, start: number, end: number }[]
 	{
-		let matches: RegExpExecArray = this.regexp.exec(subject),
-		    mapped                   = group == 0 ? 0 : this.groupIndexMapper[group],
-		    previousGroups           = group == 0 ? [] : this.previousGroupsForGroup[group],
+		let matches: RegExpExecArray                                               = this.regexp.exec(subject),
+		    mapped                                                                 = group == 0 ? 0 : this.groupIndexMapper[group],
+		    previousGroups                                                         = group == 0 ? [] : this.previousGroupsForGroup[group],
 		    firstIndex: number,
 		    matchString: string,
 		    startIndex: number,
-		    endIndex: number;
+		    endIndex: number,
+		    regexClone: RegExp                                                     = this.regexp,
+		    result: { match: string, start: number, end: number }[] = [];
 
-		if (!matches)
+		while ((matches = regexClone.exec(subject)) !== null)
 		{
-			return null;
+
+			firstIndex = matches.index;
+
+			matchString = matches[mapped];
+
+			startIndex = firstIndex + previousGroups.reduce(
+				(sum, i) => sum + (matches[i] ? matches[i].length : 0), 0
+			);
+
+			endIndex = startIndex + (matches[mapped] ? matches[mapped].length : 0);
+
+
+			result.push(
+				{
+					match: matchString,
+					start: startIndex,
+					end:   endIndex,
+				}
+			);
+
+			if (regexClone.lastIndex == matches.index)
+			{
+				regexClone.lastIndex++;
+			}
 		}
 
-		firstIndex = matches.index;
-
-		matchString = matches[mapped];
-
-		startIndex = firstIndex + previousGroups.reduce(
-			(sum, i) => sum + (matches[i] ? matches[i].length : 0), 0
-		);
-
-		endIndex = startIndex + (matches[mapped] ? matches[mapped].length : 0);
-
-
-		return {
-			match: matchString,
-			start: startIndex,
-			end:   endIndex,
-		};
+		return result;
 	}
 
 
@@ -245,7 +275,7 @@ export class SharpRegex
 			}
 			else if (matchArr[5])
 			{ // closing bracket ), )+, )+?, ){1,}?, ){1,1111}?
-				let index:number = matchArr.index + matchArr[0].length - 1;
+				let index: number = matchArr.index + matchArr[0].length - 1;
 
 				if ((groupPositions.length && !nonGroupPositions.length) ||
 					groupPositions[groupPositions.length - 1] > nonGroupPositions[nonGroupPositions.length - 1]
@@ -262,7 +292,7 @@ export class SharpRegex
 					groupPositions.pop();
 					lastGroupEndPosition = index;
 
-					let toPush:number = groupNumber.pop();
+					let toPush: number = groupNumber.pop();
 					currentLengthIndexes.push(toPush);
 					currentLengthIndexes = currentLengthIndexes.filter(index => index <= toPush);
 				}

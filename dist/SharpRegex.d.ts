@@ -19,7 +19,7 @@ export declare class SharpRegex {
         start: number;
         end: number;
         group: number;
-    }[];
+    }[][];
     /**
      * Get all groups details
      * @param {string} subject The subject string
@@ -29,7 +29,7 @@ export declare class SharpRegex {
         start: number;
         end: number;
         group: number;
-    }[];
+    }[][];
     /**
      * Get details of given group
      * @param {string} subject The subject string
@@ -39,7 +39,7 @@ export declare class SharpRegex {
         match: string;
         start: number;
         end: number;
-    };
+    }[];
     /**
      * Adds brackets before and after a part of string
      * @param str string the hole regex string

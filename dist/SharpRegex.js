@@ -15,40 +15,46 @@ var SharpRegex = /** @class */ (function () {
      * @param {string} subject The subject string
      */
     SharpRegex.prototype.getFullDetails = function (subject) {
-        var matches = this.regexp.exec(subject), firstIndex, indexMapper = Object.assign({ 0: 0 }, this.groupIndexMapper), previousGroups = Object.assign({ 0: [] }, this.previousGroupsForGroup);
-        if (!matches) {
-            return [];
+        var matches, firstIndex, indexMapper = Object.assign({ 0: 0 }, this.groupIndexMapper), previousGroups = Object.assign({ 0: [] }, this.previousGroupsForGroup), regexClone = this.regexp, result = [];
+        while ((matches = regexClone.exec(subject)) !== null) {
+            firstIndex = matches.index;
+            result.push(Object.keys(indexMapper).map(function (group) {
+                var mapped = indexMapper[group], start = firstIndex + previousGroups[group].reduce(function (sum, i) { return sum + (matches[i] ? matches[i].length : 0); }, 0);
+                return {
+                    match: matches[mapped],
+                    start: start,
+                    end: start + (matches[mapped] ? matches[mapped].length : 0),
+                    group: parseInt(group)
+                };
+            }));
+            if (regexClone.lastIndex == matches.index) {
+                regexClone.lastIndex++;
+            }
         }
-        firstIndex = matches.index;
-        return Object.keys(indexMapper).map(function (group) {
-            var mapped = indexMapper[group], start = firstIndex + previousGroups[group].reduce(function (sum, i) { return sum + (matches[i] ? matches[i].length : 0); }, 0);
-            return {
-                match: matches[mapped],
-                start: start,
-                end: start + (matches[mapped] ? matches[mapped].length : 0),
-                group: parseInt(group)
-            };
-        });
+        return result;
     };
     /**
      * Get all groups details
      * @param {string} subject The subject string
      */
     SharpRegex.prototype.getGroupsDetails = function (subject) {
-        var matches = this.regexp.exec(subject), indexMapper = this.groupIndexMapper, previousGroups = this.previousGroupsForGroup, firstIndex;
-        if (!matches) {
-            return [];
+        var matches = this.regexp.exec(subject), indexMapper = this.groupIndexMapper, previousGroups = this.previousGroupsForGroup, firstIndex, regexClone = this.regexp, result = [];
+        while ((matches = regexClone.exec(subject)) !== null) {
+            firstIndex = matches.index;
+            result.push(Object.keys(indexMapper).map(function (group) {
+                var mapped = indexMapper[group], start = firstIndex + previousGroups[group].reduce(function (sum, i) { return sum + (matches[i] ? matches[i].length : 0); }, 0);
+                return {
+                    match: matches[mapped],
+                    start: start,
+                    end: start + (matches[mapped] ? matches[mapped].length : 0),
+                    group: parseInt(group)
+                };
+            }));
+            if (regexClone.lastIndex == matches.index) {
+                regexClone.lastIndex++;
+            }
         }
-        firstIndex = matches.index;
-        return Object.keys(indexMapper).map(function (group) {
-            var mapped = indexMapper[group], start = firstIndex + previousGroups[group].reduce(function (sum, i) { return sum + (matches[i] ? matches[i].length : 0); }, 0);
-            return {
-                match: matches[mapped],
-                start: start,
-                end: start + (matches[mapped] ? matches[mapped].length : 0),
-                group: parseInt(group)
-            };
-        });
+        return result;
     };
     /**
      * Get details of given group
@@ -56,19 +62,22 @@ var SharpRegex = /** @class */ (function () {
      * @param {number} group The group number
      */
     SharpRegex.prototype.getGroupDetails = function (subject, group) {
-        var matches = this.regexp.exec(subject), mapped = group == 0 ? 0 : this.groupIndexMapper[group], previousGroups = group == 0 ? [] : this.previousGroupsForGroup[group], firstIndex, matchString, startIndex, endIndex;
-        if (!matches) {
-            return null;
+        var matches = this.regexp.exec(subject), mapped = group == 0 ? 0 : this.groupIndexMapper[group], previousGroups = group == 0 ? [] : this.previousGroupsForGroup[group], firstIndex, matchString, startIndex, endIndex, regexClone = this.regexp, result = [];
+        while ((matches = regexClone.exec(subject)) !== null) {
+            firstIndex = matches.index;
+            matchString = matches[mapped];
+            startIndex = firstIndex + previousGroups.reduce(function (sum, i) { return sum + (matches[i] ? matches[i].length : 0); }, 0);
+            endIndex = startIndex + (matches[mapped] ? matches[mapped].length : 0);
+            result.push({
+                match: matchString,
+                start: startIndex,
+                end: endIndex,
+            });
+            if (regexClone.lastIndex == matches.index) {
+                regexClone.lastIndex++;
+            }
         }
-        firstIndex = matches.index;
-        matchString = matches[mapped];
-        startIndex = firstIndex + previousGroups.reduce(function (sum, i) { return sum + (matches[i] ? matches[i].length : 0); }, 0);
-        endIndex = startIndex + (matches[mapped] ? matches[mapped].length : 0);
-        return {
-            match: matchString,
-            start: startIndex,
-            end: endIndex,
-        };
+        return result;
     };
     /**
      * Adds brackets before and after a part of string
