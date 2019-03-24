@@ -1,9 +1,11 @@
 {
   "name": "sharp-regex",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Implements advance feature for regex",
-  "main": "src/public_api.ts",
+  "main": "dist/public_api.js",
+  "types": "dist/public_api.d.ts",
   "scripts": {
+	"build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -18,9 +20,10 @@
     "url": "https://github.com/Lavaei/SharpRegex/issues"
   },
   "homepage": "https://github.com/Lavaei/SharpRegex#readme",
+  "devDependencies": {
+	"typescript": "2.5.2"
+  },
   "files": [
-	"src/public_api.ts",
-	"src/SharpRegex.ts",
-	"tsconfig.json"
+	"dist/**/*"
   ]
 }
