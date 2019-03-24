@@ -1,6 +1,6 @@
 {
   "name": "sharp-regex",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Implements advance feature for regex",
   "main": "dist/public_api.js",
   "types": "dist/public_api.d.ts",

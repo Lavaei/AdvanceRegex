@@ -39,10 +39,12 @@ console.log(result);
 Will output:
 ```
 /**
- * [ 
- *  { match: 'a bcdefghixyz', start: 4, end: 17, group: 0 },
- *  { match: 'defghixyz', start: 8, end: 17, group: 1 },
- *  { match: 'ghi', start: 11, end: 14, group: 2 } 
+ * [
+ *  [ 
+ *   { match: 'a bcdefghixyz', start: 4, end: 17, group: 0 },
+ *   { match: 'defghixyz', start: 8, end: 17, group: 1 },
+ *   { match: 'ghi', start: 11, end: 14, group: 2 } 
+ *  ]
  * ]
  */
 ```
@@ -53,9 +55,11 @@ To get just groups details:
 let matches = sharpRegex.getGroupsDetails('ababa bcdefghixyzXXXX');
 
 /**
- * [ 
- *  { match: 'defghixyz', start: 8, end: 17, group: 1 },
- *  { match: 'ghi', start: 11, end: 14, group: 2 } 
+ * [
+ *  [ 
+ *   { match: 'defghixyz', start: 8, end: 17, group: 1 },
+ *   { match: 'ghi', start: 11, end: 14, group: 2 } 
+ *  ]
  * ]
  */
 
@@ -67,6 +71,8 @@ To get just given group details:
 let matches = sharpRegex.getGroupDetails('ababa bcdefghixyzXXXX', 2);
 
 /**
- * { match: 'ghi', start: 11, end: 14, group: 2 }
+ * [
+ *  { match: 'ghi', start: 11, end: 14 }
+ * ]
  */
 ```
