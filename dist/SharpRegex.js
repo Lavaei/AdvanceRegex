@@ -15,21 +15,30 @@ var SharpRegex = /** @class */ (function () {
      * @param {string} subject The subject string
      */
     SharpRegex.prototype.getFullDetails = function (subject) {
-        var matches, firstIndex, indexMapper = Object.assign({ 0: 0 }, this.groupIndexMapper), previousGroups = Object.assign({ 0: [] }, this.previousGroupsForGroup), regexClone = this.regexp, result = [];
-        while ((matches = regexClone.exec(subject)) !== null) {
-            firstIndex = matches.index;
-            result.push(Object.keys(indexMapper).map(function (group) {
-                var mapped = indexMapper[group], start = firstIndex + previousGroups[group].reduce(function (sum, i) { return sum + (matches[i] ? matches[i].length : 0); }, 0);
-                return {
-                    match: matches[mapped],
-                    start: start,
-                    end: start + (matches[mapped] ? matches[mapped].length : 0),
-                    group: parseInt(group)
-                };
-            }));
-            if (regexClone.lastIndex == matches.index) {
+        var matches, indexMapper = Object.assign({ 0: 0 }, this.groupIndexMapper), previousGroups = Object.assign({ 0: [] }, this.previousGroupsForGroup), regexClone = this.regexp, result = [];
+        var _loop_1 = function () {
+            var firstIndex = matches.index, localResult = [];
+            Object.keys(indexMapper).forEach(function (group) {
+                var mapped = indexMapper[group], start = firstIndex + previousGroups[group].reduce(function (sum, i) { return sum + (matches[i] ? matches[i].length : 0); }, 0), end = start + (matches[mapped] ? matches[mapped].length : 0);
+                if (group === "0" || end > start) {
+                    localResult.push({
+                        match: matches[mapped],
+                        start: start,
+                        end: end,
+                        group: parseInt(group)
+                    });
+                }
+            });
+            result.push(localResult);
+            /**
+             * Prevent from infinite loop
+             */
+            if (regexClone.lastIndex == firstIndex) {
                 regexClone.lastIndex++;
             }
+        };
+        while ((matches = regexClone.exec(subject)) !== null) {
+            _loop_1();
         }
         return result;
     };
@@ -38,21 +47,30 @@ var SharpRegex = /** @class */ (function () {
      * @param {string} subject The subject string
      */
     SharpRegex.prototype.getGroupsDetails = function (subject) {
-        var matches = this.regexp.exec(subject), indexMapper = this.groupIndexMapper, previousGroups = this.previousGroupsForGroup, firstIndex, regexClone = this.regexp, result = [];
-        while ((matches = regexClone.exec(subject)) !== null) {
-            firstIndex = matches.index;
-            result.push(Object.keys(indexMapper).map(function (group) {
-                var mapped = indexMapper[group], start = firstIndex + previousGroups[group].reduce(function (sum, i) { return sum + (matches[i] ? matches[i].length : 0); }, 0);
-                return {
-                    match: matches[mapped],
-                    start: start,
-                    end: start + (matches[mapped] ? matches[mapped].length : 0),
-                    group: parseInt(group)
-                };
-            }));
-            if (regexClone.lastIndex == matches.index) {
+        var matches = this.regexp.exec(subject), indexMapper = this.groupIndexMapper, previousGroups = this.previousGroupsForGroup, regexClone = this.regexp, result = [];
+        var _loop_2 = function () {
+            var firstIndex = matches.index, localResult = [];
+            Object.keys(indexMapper).forEach(function (group) {
+                var mapped = indexMapper[group], start = firstIndex + previousGroups[group].reduce(function (sum, i) { return sum + (matches[i] ? matches[i].length : 0); }, 0), end = start + (matches[mapped] ? matches[mapped].length : 0);
+                if (group === "0" || end > start) {
+                    localResult.push({
+                        match: matches[mapped],
+                        start: start,
+                        end: start + (matches[mapped] ? matches[mapped].length : 0),
+                        group: parseInt(group)
+                    });
+                }
+            });
+            result.push(localResult);
+            /**
+             * Prevent from infinite loop
+             */
+            if (regexClone.lastIndex == firstIndex) {
                 regexClone.lastIndex++;
             }
+        };
+        while ((matches = regexClone.exec(subject)) !== null) {
+            _loop_2();
         }
         return result;
     };
@@ -73,7 +91,10 @@ var SharpRegex = /** @class */ (function () {
                 start: startIndex,
                 end: endIndex,
             });
-            if (regexClone.lastIndex == matches.index) {
+            /**
+             * Prevent from infinite loop
+             */
+            if (regexClone.lastIndex == firstIndex) {
                 regexClone.lastIndex++;
             }
         }
@@ -108,15 +129,15 @@ var SharpRegex = /** @class */ (function () {
      */
     SharpRegex.prototype._fillGroups = function (regex) {
         var regexString = regex.source, modifier = regex.flags, tester = /(\\\()|(\\\))|(\(\?)|(\()|(\)(?:{\d+,?\d*}|[*+?])?\??)/g, modifiedRegex = regexString, lastGroupStartPosition = -1, lastGroupEndPosition = -1, lastNonGroupStartPosition = -1, lastNonGroupEndPosition = -1, groupsAdded = 0, groupCount = 0, matchArr, nonGroupPositions = [], groupPositions = [], groupNumber = [], currentLengthIndexes = [], groupIndexMapper = {}, previousGroupsForGroup = {};
-        var _loop_1 = function () {
-            if (matchArr[1] || matchArr[2]) {
+        var _loop_3 = function () {
+            if (matchArr[1] || matchArr[2]) { // ignore escaped brackets \(, \)
             }
-            if (matchArr[3]) {
+            if (matchArr[3]) { // non capturing group (?
                 var index = matchArr.index + matchArr[0].length - 1;
                 lastNonGroupStartPosition = index;
                 nonGroupPositions.push(index);
             }
-            else if (matchArr[4]) {
+            else if (matchArr[4]) { // capturing group (
                 var index = matchArr.index + matchArr[0].length - 1, lastGroupPosition = Math.max(lastGroupStartPosition, lastGroupEndPosition);
                 // if a (? is found add ) before it
                 if (lastNonGroupStartPosition > lastGroupPosition) {
@@ -163,7 +184,7 @@ var SharpRegex = /** @class */ (function () {
                 groupIndexMapper[groupCount] = groupCount + groupsAdded;
                 previousGroupsForGroup[groupCount] = currentLengthIndexes.slice();
             }
-            else if (matchArr[5]) {
+            else if (matchArr[5]) { // closing bracket ), )+, )+?, ){1,}?, ){1,1111}?
                 var index = matchArr.index + matchArr[0].length - 1;
                 if ((groupPositions.length && !nonGroupPositions.length) ||
                     groupPositions[groupPositions.length - 1] > nonGroupPositions[nonGroupPositions.length - 1]) {
@@ -187,7 +208,7 @@ var SharpRegex = /** @class */ (function () {
         };
         var this_1 = this;
         while ((matchArr = tester.exec(regexString)) !== null) {
-            _loop_1();
+            _loop_3();
         }
         return { regexp: new RegExp(modifiedRegex, modifier), groupIndexMapper: groupIndexMapper, previousGroupsForGroup: previousGroupsForGroup };
     };

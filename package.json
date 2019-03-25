@@ -1,6 +1,6 @@
 {
   "name": "sharp-regex",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Implements advance feature for regex",
   "main": "dist/public_api.js",
   "types": "dist/public_api.d.ts",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Lavaei/SharpRegex.git"
+    "url": "git+https://github.com/Lavaei/sharp-regex.git"
   },
   "keywords": [
     "Regex"
@@ -17,9 +17,9 @@
   "author": "Mostafa Lavaei",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Lavaei/SharpRegex/issues"
+    "url": "https://github.com/Lavaei/sharp-regex/issues"
   },
-  "homepage": "https://github.com/Lavaei/SharpRegex#readme",
+  "homepage": "https://github.com/Lavaei/sharp-regex#readme",
   "devDependencies": {
 	"typescript": "2.5.2"
   },

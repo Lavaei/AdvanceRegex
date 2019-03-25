@@ -14,32 +14,18 @@ export declare class SharpRegex {
      * Get all detail of full match and all groups details
      * @param {string} subject The subject string
      */
-    getFullDetails(subject: string): {
-        match: string;
-        start: number;
-        end: number;
-        group: number;
-    }[][];
+    getFullDetails(subject: string): SharpRegexDetailsContract[][];
     /**
      * Get all groups details
      * @param {string} subject The subject string
      */
-    getGroupsDetails(subject: string): {
-        match: string;
-        start: number;
-        end: number;
-        group: number;
-    }[][];
+    getGroupsDetails(subject: string): SharpRegexDetailsContract[][];
     /**
      * Get details of given group
      * @param {string} subject The subject string
      * @param {number} group The group number
      */
-    getGroupDetails(subject: string, group: number): {
-        match: string;
-        start: number;
-        end: number;
-    }[];
+    getGroupDetails(subject: string, group: number): SharpRegexDetailsContract[];
     /**
      * Adds brackets before and after a part of string
      * @param str string the hole regex string
@@ -72,4 +58,10 @@ export declare class SharpRegex {
             [key: number]: number[];
         };
     };
+}
+export interface SharpRegexDetailsContract {
+    match: string;
+    start: number;
+    end: number;
+    group?: number;
 }

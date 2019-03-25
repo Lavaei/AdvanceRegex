@@ -1,6 +1,6 @@
-# SharpRegex
+# sharp-regex
 
-This class gets all matches, with start and end position, within the string, for a given regexp.
+This class gets all matches, with start and end position, within the string, for a given regex.
 
 From high level the source code is:
  
